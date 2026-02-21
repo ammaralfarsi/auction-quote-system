@@ -1,1 +1,36 @@
+version: "3.9"
 
+services:
+  auction-quote-api:
+    build: ./api
+    container_name: auction-quote-api
+    environment:
+      PORT: "3000"
+      DATABASE_URL: "postgresql://postgres:Oman%401990@auction-quote-postgres:5432/auction_quotes"
+      WAHA_BASE_URL: "http://192.168.1.155:3000"
+      WAHA_SESSION: "Ammar"
+    networks:
+      - auction_internal
+    expose:
+      - "3000"
+    depends_on:
+      - auction-quote-postgres
+
+  auction-quote-postgres:
+    image: postgres:16
+    container_name: auction-quote-postgres
+    environment:
+      POSTGRES_PASSWORD: "Oman@1990"
+      POSTGRES_DB: "auction_quotes"
+    volumes:
+      - auction_quote_pg_data:/var/lib/postgresql/data
+    networks:
+      - auction_internal
+    expose:
+      - "5432"
+
+networks:
+  auction_internal:
+
+volumes:
+  auction_quote_pg_data:
